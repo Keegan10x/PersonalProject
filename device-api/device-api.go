@@ -14,15 +14,15 @@ func main() {
 	// define dependencies
 	router := mux.NewRouter()
 	logger := logger.NewLogger()
-	conf := config.NewDeviceAPIConfig(logger).FromEnv()
+	c := config.NewDeviceAPIConfig(logger).FromEnv()
 
 	router.HandleFunc("/", handlers.HomeHandler).Methods("GET")
 
 	// start server
-	svr := server.NewServer(router, logger, conf)
+	svr := server.NewServer(router, logger, c)
 	err := svr.Run()
 	if err != nil {
-		logger.Error().Err(err).Int("TriedPort", conf.Port) // log out error
+		logger.Error().Err(err).Int("tried port", c.Port) // log out error
 		os.Exit(2)
 	}
 }
