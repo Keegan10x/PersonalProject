@@ -16,8 +16,6 @@ func main() {
 	logger := logger.NewLogger()
 	conf := config.NewDeviceAPIConfig(logger).FromEnv()
 
-	// define routes here
-	// ...
 	router.HandleFunc("/", handlers.HomeHandler).Methods("GET")
 
 	// start server
