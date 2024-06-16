@@ -2,7 +2,7 @@ package config_test
 
 import (
 	"fmt"
-	"main/device-api/internal/config"
+	"main/location-calculator/internal/config"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

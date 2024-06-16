@@ -6,7 +6,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func LoadTemplateConfigMap(path string) (*DeviceAPIConfig, error) {
+func LoadTemplateConfigMap(path string) (*LocationCalculatorConfig, error) {
 
 	// read the YAML file
 	yamlFile, err := os.ReadFile(path)
@@ -15,7 +15,7 @@ func LoadTemplateConfigMap(path string) (*DeviceAPIConfig, error) {
 	}
 
 	// unmarshal the YAML content into a Config struct
-	var config DeviceAPIConfig
+	var config LocationCalculatorConfig
 	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
 		return nil, err

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	viewers "main/dbl"
+	viewers "main/dbl/locations"
 	"net/http"
 	"time"
 
@@ -10,18 +10,34 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+const customTimeLayout = "2006-01-02T15:04:05"
+
 // HomeHandler is the handler for the home route
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the Home Page!")
+func HomeHandler() http.Handler {
+
+	jsonUX := jsoniter.Config{
+		EscapeHTML:             true,
+		SortMapKeys:            true,
+		ValidateJsonRawMessage: true,
+		TagKey:                 "UX",
+	}.Froze()
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		encoder := jsonUX.NewEncoder(w)
+		err := encoder.Encode("hello from the home handler")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+
+			// log out error
+			fmt.Printf("failed to hit home handler with error: %s", err.Error())
+			return
+		}
+		fmt.Println("successfully returned from home handler") // log out success
+	})
 }
 
-// AboutHandler is the handler for the about route
-func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "About Us!")
-}
-
-// DeviceLocationValues handles a request for a range of device locations
-func DeviceLocationValues(locationDBL viewers.LocationDBL) http.HandlerFunc {
+// LocationValues handles a request for a range of device locations
+func LocationValues(locationDBL viewers.LocationDBL) http.HandlerFunc {
 
 	jsonUX := jsoniter.Config{
 		EscapeHTML:             true,
@@ -48,7 +64,7 @@ func DeviceLocationValues(locationDBL viewers.LocationDBL) http.HandlerFunc {
 			return
 		}
 
-		startTime, err := time.Parse(time.RFC3339, r.FormValue("startTime"))
+		startTime, err := time.Parse(customTimeLayout, r.FormValue("startTime"))
 		if err != nil {
 			http.Error(w, "cannot parse startTime", http.StatusBadRequest)
 
@@ -57,7 +73,7 @@ func DeviceLocationValues(locationDBL viewers.LocationDBL) http.HandlerFunc {
 			return
 		}
 
-		stopTime, err := time.Parse(time.RFC3339, r.FormValue("stopTime"))
+		stopTime, err := time.Parse(customTimeLayout, r.FormValue("stopTime"))
 		if err != nil {
 			http.Error(w, "cannot parse stopTime", http.StatusBadRequest)
 

@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	"main/device-api/internal/config"
+	"main/location-calculator/internal/config"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,10 +12,10 @@ import (
 type server struct {
 	router *mux.Router
 	logger *zerolog.Logger
-	config *config.DeviceAPIConfig
+	config *config.LocationCalculatorConfig
 }
 
-func NewServer(router *mux.Router, logger *zerolog.Logger, config *config.DeviceAPIConfig) *server {
+func NewServer(router *mux.Router, logger *zerolog.Logger, config *config.LocationCalculatorConfig) *server {
 	s := &server{
 		router: router,
 		logger: logger,
@@ -30,6 +30,6 @@ func (s *server) Run() error {
 	if err != nil {
 		return err
 	}
-	s.logger.Info().Msg("device api started") // message
+	s.logger.Info().Msg("location-calculator started") // message
 	return nil
 }

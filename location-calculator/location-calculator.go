@@ -1,9 +1,9 @@
 package main
 
 import (
-	"main/device-api/internal/config"
-	"main/device-api/internal/handlers"
-	"main/device-api/internal/server"
+	"main/location-calculator/internal"
+	"main/location-calculator/internal/config"
+	"main/location-calculator/internal/server"
 	"main/services/logger"
 	"os"
 
@@ -11,12 +11,14 @@ import (
 )
 
 func main() {
+
 	// define dependencies
 	router := mux.NewRouter()
 	logger := logger.NewLogger()
-	c := config.NewDeviceAPIConfig(logger).FromEnv()
+	c := config.NewLocationCalculatorConfig(logger).FromEnv()
 
-	router.HandleFunc("/", handlers.HomeHandler).Methods("GET")
+	// register routes
+	internal.PublicRoutes(router, nil)
 
 	// start server
 	svr := server.NewServer(router, logger, c)
